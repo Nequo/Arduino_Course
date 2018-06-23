@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+	<title>Serial Lesson</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+	<link rel="stylesheet" href="/assets/css/main.css" />
+	<link rel="stylesheet" href="/assets/prism/prism.css" />
+	<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+	<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+</head>
+
+<body>
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<span class="logo"><a href="/" id = "title_link" ><img src="/images/logo.svg"/></a></span>
+			<h1>Serial Lesson</h1>
+			<p>How to send data to computer</p>
+		</header>
+
+		<nav id="nav">
+			<ul>
+				<li><a href="#intro" class="active">Introduction</a></li>
+				<li><a href="#components">Components</a></li>
+				<li><a href="#arduino">Arduino</a></li>
+				<li><a href="#processing">Processing</a></li>
+				<!-- <li><a href="#cta">List of lessons</a></li> -->
+			</ul>
+		</nav>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Content -->
+			<section id="intro" class="main">
+				<span class="image main"><img src="images/Serial_top_image.png" alt="" /></span>
+
+				<h1>Introduction</h1>
+
+				<p>
+					In this tutorial, we will be showing you how to send data from Arduino to a computer. The data will be received by a Processing program.
+				</p>
+
+			</section>
+
+			<section id="arduino" class="main">
+				<h1>Arduino Code</h1>
+				<pre class="language-clike line-numbers" data-src="Serial.ino"></pre>
+
+				<hr />
+				<h2>Code explanation</h2>
+
+				<h3>Initialise variables</h3>
+				<code class="language-clike">
+int a = -500;
+int b = 1000;
+					</code>
+				<p>
+					We initialize two variables which we are going to send to the computer.
+				</p>
+
+				<h3>Setup data rate</h3>
+				<code class="language-clike">
+Serial.begin(9600);
+					</code>
+				<p>
+					This configures the serial port with a certain number of bits per second (baud). This has to be the same in the Arduino and later in the Processing programs.
+				</p>
+
+				<h3>Send</h3>
+				<code class="language-clike" style="display:block;white-space:pre-wrap">
+Serial.print(a);
+Serial.print(" ");
+Serial.print(b);
+Serial.println();
+					</code>
+				<p>Prints the two variables to the serial port with a space in between.</p>
+				<p><code class="language-clike">Serial.println();</code> sends a new line character, which can be used to determine where one message ends.</p>
+
+				<h3>Change variables</h3>
+				<code class="language-clike">
+a++;
+b--;
+						</code>
+				<p>
+					We could use input from sensors here instead.
+				</p>
+
+
+				<hr />
+				<h2>Run the program</h2>
+				<p>Upload the code to Arduino. Then open the serial monitor. Shortcut: <code>Ctrl + Shift + M</code></p>
+				<div class="6u"><span class="image fit"><img src="images/Serial_open_monitor.png"/></span></div>
+
+				<p>After a few seconds you will see the changing values of <code>a</code> and <code>b</code>.</p>
+				<div class="6u"><span class="image fit"><img src="images/Serial_monitor.png"/></span></div>
+
+
+			</section>
+
+			<section id="processing" class="main">
+				<h1>Processing Code</h1>
+				<pre class="language-processing line-numbers" data-src="ProcessingSerial.pde"></pre>
+
+				<p>
+					In this section, you will learn how to write the code for controlling the servo motor. You will be able to set an angle for the rotation of the servo motor. <br> As we did in the previous tutorial, we have put the code below so you can read it once
+					and then will run you through it.
+				</p>
+
+				<hr />
+				<h2>Code explanation</h2>
+
+				<h3>Import serial library</h3>
+				<code class="language-processing">
+import processing.serial.*;
+					</code>
+				<p>This library provides function to send and receive data from the serial port.</p>
+
+				<h3>Setup serial</h3>
+				<p><code class="language-processing">Serial serialPort;</code> Declares the serial variable.</p>
+				<p><code class="language-processing">String portName = Serial.list()[1];</code>Gets the serial port name for arduino. </p>
+				<p><code class="language-processing">Serial.list()</code> is an array containing a list of available serial ports. You can print this array with the <code class="language-processing">printArray(array)</code> function to find out which number to choose.
+					Remeber that the first array index is <code class="language-processing">0</code></p>
+
+				<code class="language-processing" style=display:block;white-space:pre-wrap>
+serialPort = new Serial(this, portName, 9600);
+serialPort.bufferUntil('\n');
+				</code>
+				<p>Initialises the serial object with <code class="language-processing">9600</code> as baud rate and the previously selected port name.</p>
+				<p>In the Arduino program we send one line at a time. Each line ends with a new line character <code class="language-processing">'\n'</code></p>
+				<p>The serial object will read the serial port until it reaches the new line character.</p>
+
+				<h3>Receive data</h3>
+				<p>The <code class="language-processing">draw()</code> functions runs continously.</p>
+				<p><code class="language-processing">while (serialPort.available() > 0)</code> The program will receive strings as long as the serial port has some data available.</p>
+				<p><code class="language-processing">String receivedString = serialPort.readStringUntil('\n');</code> Stores the line in a string.</p>
+				<p>Sometimes the serial can not be read properly. To avoild crashing the program we use if <code class="language-processing">(receivedString != null)</code> to check if we received any data.</p>
+
+				<h3>Use data</h3>
+				<p>We then pass the received string to the <code class="language-processing">processSerialInput</code> function as a parameter.</p>
+				<p><code class="language-processing">float[] nums = float(split(receivedString, ' '));</code> splits the string into a array of floats using 'space' as the character between two numbers.</p>
+				<p><code class="language-processing">float a = nums[0]; float b = nums[1];</code> stores the first and second elements of the array in seperate variables.</p>
+				<p><code class="language-processing">println("a=" + a + " b=" + b);</code> prints the variables with some text on a new line.</p>
+				<p>You can use the variables in some other way. For example by drawing a diagram.</p>
+
+				<hr />
+				<h2>Run the program</h2>
+				<p>Upload the code by clicking the play button. You will see the values in the box on the bottom of the window.</p>
+				<div class="6u"><span class="image fit"><img src="images/Serial_processing_running.png"/></span></div>
+
+				<hr />
+				<h2>Exercises</h2>
+
+				<h3>Exercise 1</h3>
+				<p>Add another variable in the Arduino code. And send it to the Processing sketch. For example, use the ultrasonic distance.</p>
+
+				<h3>Exercise 2</h3>
+				<p>Sometimes the processing sketch might not receive the whole string. How can you make sure that no error occur during the runtime?</p>
+				<p><i>Hint: </i> To check if the element at index <code class="language-processing">1</code> exists use: <code class="language-processing">if (nums.length > 1)</code></p>
+
+				<h3>Exercise 3</h3>
+				<p>Draw a shape in Processing according to the size of one or more variables.</p>
+				<p>Find out about Processing functions. For example
+					<a href="https://processing.org/reference/ellipse_.html"><code class="language-processing">ellipse()</code></a> and
+					<a href="https://processing.org/reference/rect_.html"><code class="language-processing">rect()</code></a></p>
+
+				<h3>Exercise 4</h3>
+				<p>Draw a line graph of one or multiple received variables in Processing.</p>
+				<p>Find out how to store and access multiple values in a datastucture like <a href="https://processing.org/reference/ArrayList.html"><code class="language-processing">ArrayList</code></a></p>
+				<p><i>Do you need to store all values? Can you just store the last <code class="language-processing">50</code> values to save memory?</i></p>
+
+				<hr />
+				<h2>Challenge</h2>
+				<p>
+					For those of you that want more of a challenge, find out how to send data the other way (Processing to Arduino). Links:
+				</p>
+
+				<ul>
+					<li><a href="https://learn.sparkfun.com/tutorials/connecting-arduino-to-processing">Tutorial by Sparkfun</a></li>
+					<li><a href="https://www.arduino.cc/en/reference/serial">Arduino Serial Documentation</a></li>
+					<li><a href="https://processing.org/reference/libraries/serial/">Processing Serial Documentation</a></li>
+				</ul>
+
+
+
+
+				<div style="text-align: right">
+					<a href="/Radar" class="button special icon chevron-right">Next Lesson</a>
+					<a href="/Ultrasonic" class="button special icon fa-chevron-left" style="float:left">Previous Lesson</a>
+				</div>
+			</section>
+
+			<!-- <section id="code" class="main">
+			</section> -->
+
+		</div>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<section>
+				<h2>About</h2>
+				<p>Created by Nadim and David</p>
+				<ul class="actions">
+					<li><a href="/about" class="button">Learn More</a></li>
+				</ul>
+			</section>
+			<section>
+				<h2>Contact us</h2>
+				<dl class="alt">
+					<dt>Email</dt>
+					<dd><a href="#">nadim.gomez.16@ucl.ac.uk</a></dd>
+					<dd><a href="#">david.stepanovs.16@ucl.ac.uk</a></dd>
+				</dl>
+				<ul class="icons">
+					<!-- <li><a href="#" class="icon fa-github alt"><span class="label">GitHub</span></a></li> -->
+				</ul>
+			</section>
+			<p class="copyright">&copy; N&amp;D. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/jquery.scrollex.min.js"></script>
+	<script src="/assets/js/jquery.scrolly.min.js"></script>
+	<script src="/assets/js/skel.min.js"></script>
+	<script src="/assets/js/util.js"></script>
+	<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+	<script src="/assets/js/main.js"></script>
+	<script src="/assets/prism/prism.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<!--
+	Stellar by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+	<title>Radar</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+	<link rel="stylesheet" href="/assets/css/main.css" />
+	<link rel="stylesheet" href="/assets/prism/prism.css" />
+	<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+	<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+</head>
+
+<body>
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<span class="logo"><a href="/" id = "title_link" ><img src="/images/logo.svg"/></a></span>
+			<h1>Radar</h1>
+			<p>Our Arduino and Processing code for a radar</p>
+		</header>
+
+		<nav id="nav">
+			<ul>
+				<li><a href="#intro" class="active">Introduction</a></li>
+				<li><a href="#components">Components</a></li>
+				<li><a href="#arduino">Arduino</a></li>
+				<li><a href="#processing">Processing</a></li>
+				<!-- <li><a href="#cta">List of lessons</a></li> -->
+			</ul>
+		</nav>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Content -->
+			<section id="intro" class="main">
+				<span class="image main"><img src="images/Radar_top_image.jpg" alt="" /></span>
+
+				<h1>Introduction</h1>
+
+				<p>We used the components from previous tutorials to create a radar.</p>
+				<div class="12u">
+					<video controls width="100%" muted>
+  				<source src="images/radar_video.mp4" type="video/mp4">
+  				Your browser does not support HTML5 video.
+				</video>
+				</div>
+
+			</section>
+
+			<section id="components" class="main">
+				<div>
+					<h1>Components</h1>
+					<ul>
+						<li>Arduino UNO or similar</li>
+						<li>Breadboard</li>
+						<li>Jumper Wires</li>
+						<li>LED</li>
+						<li>Resistor</li>
+						<li>Servo motor</li>
+						<li>Ultrasonic Sensor</li>
+					</ul>
+				</div>
+
+				<p>We combined the circuits from previous tutorials. Our circuit looks similar to the diagram below:</p>
+				<div class="6u"><span class="image fit"><img src="images/Radar_circuit.jpg"/></span></div>
+			</section>
+
+			<section id="arduino" class="main">
+				<h1>Arduino</h1>
+				<pre class="language-clike line-numbers" data-src="ArduinoRadar.ino"></pre>
+
+				<hr />
+				<h2>Code explanation</h2>
+
+				<h3>Setup</h3>
+				<p>We define the nesessary variables and objects and initialize the objects just like in previous lessons.</p>
+
+				<h3>Loop function</h3>
+				<p>In the <code class="language-clike">loop()</code> function we sweep the servo and perform the measurements. To avoid having duplicate code, we call another function.</p>
+
+				<h3>Measure and send</h3>
+				<p>In the <code class="language-clike">measureDistance()</code> function we</p>
+				<ol>
+					<li>Set the servo angle</li>
+					<li>Measure the ultrasonic distance</li>
+					<li>Turn LED on/off according to the distance</li>
+					<li>Send the current angle and distance to Serial</li>
+				</ol>
+
+			</section>
+
+			<section id="processing" class="main">
+				<h1>Processing</h1>
+				<pre class="language-processing line-numbers" data-src="ProcessingRadar.pde"></pre>
+
+				<hr />
+				<h2>Code explanation</h2>
+
+				<h3>Draw Radar Outline</h3>
+				<code class="language-processing">drawRadar()</code>
+				<p>This function draws the arcs and lines for the radar. We also print the angles and distances.</p>
+				<div class="6u"><span class="image fit"><img src="images/drawRadar.png"/></span></div>
+
+				<h3>Draw Scanning Line</h3>
+				<code class="language-processing">drawCurrentScanningLine()</code>
+				<p>Draws the scanning line for the current angle.</p>
+				<div class="6u"><span class="image fit"><img src="images/drawCurrentScanningLine.png"/></span></div>
+
+				<h3>Draw Detected object</h3>
+				<code class="language-processing">drawRadar()</code>
+				<p>If an object is detected a line is drawn from the corrent distance on the radar.</p>
+				<div class="6u"><span class="image fit"><img src="images/drawObject.png"/></span></div>
+
+				<h3>Draw Information</h3>
+				<code class="language-processing">drawCurrentScanningLine()</code>
+				<p>The current angle and distance are printed.</p>
+				<div class="6u"><span class="image fit"><img src="images/drawInfo.png"/></span></div>
+
+				<h3>Fade</h3>
+				<code class="language-processing">drawCurrentScanningLine()</code>
+				<p>Draws a semi-transparent black background to hide old values.</p>
+				<div class="6u"><span class="image fit"><img src="images/motionBlurAndFade.png"/></span></div>
+
+
+				<h3>Push/Pop Matrix</h3>
+
+				<p><code class="language-processing">pushMatrix()</code> saves current transformation.</p>
+				<p><code class="language-processing">popMatrix()</code> restores the last transformation.</p>
+
+				<h3>Translate</h3>
+				<p><code class="language-processing">translate(x, y)</code> moves the coordinate system</p>
+				<p>The coordinate system in Processing begins in the top-left corner of the screen. The <code class="language-processing">x</code> value increases to the right. The <code class="language-processing">y</code> value increases to the bottom.</p>
+
+				<h3>Radar Running</h3>
+				<div class="12u"><span class="image fit"><img src="images/Working.png"/></span></div>
+
+
+				<hr />
+				<h2>Exercise</h2>
+				<p>Display a text when an object is currently detected.</p>
+
+				<hr />
+				<h2>Challenge</h2>
+				<p>
+					Add any functionality to the radar or build something creative yourself!
+				</p>
+
+				<div style="text-align: right">
+					<a href="/Serial" class="button special icon fa-chevron-left" style="float:left">Previous Lesson</a>
+				</div>
+			</section>
+
+			<!-- <section id="code" class="main">
+			</section> -->
+
+		</div>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<section>
+				<h2>About</h2>
+				<p>Created by Nadim and David</p>
+				<ul class="actions">
+					<li><a href="/about" class="button">Learn More</a></li>
+				</ul>
+			</section>
+			<section>
+				<h2>Contact us</h2>
+				<dl class="alt">
+					<dt>Email</dt>
+					<dd><a href="#">nadim.gomez.16@ucl.ac.uk</a></dd>
+					<dd><a href="#">david.stepanovs.16@ucl.ac.uk</a></dd>
+				</dl>
+				<ul class="icons">
+					<!-- <li><a href="#" class="icon fa-github alt"><span class="label">GitHub</span></a></li> -->
+				</ul>
+			</section>
+			<p class="copyright">&copy; N&amp;D. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/jquery.scrollex.min.js"></script>
+	<script src="/assets/js/jquery.scrolly.min.js"></script>
+	<script src="/assets/js/skel.min.js"></script>
+	<script src="/assets/js/util.js"></script>
+	<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+	<script src="/assets/js/main.js"></script>
+	<script src="/assets/prism/prism.js"></script>
+
+</body>
+
+</html>
